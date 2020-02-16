@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Alert,
   Button,
   Keyboard,
   StyleSheet,
@@ -13,9 +14,35 @@ import Colors from "../constants/colors";
 
 export default function StartGame() {
   const [enteredValue, setEnteredValue] = useState("");
+  const [confirmed, setConfirmed] = useState(false);
+  const [selectedNumber, setSelectedNumber] = useState();
 
-  function numberInputHandler(inputText) {
+  function handleNumberInput(inputText) {
     setEnteredValue(inputText.replace(/[^0-9]/g, ""));
+  }
+
+  function handleResetInput() {
+    setEnteredValue("");
+    setConfirmed(false);
+  }
+
+  function handleConfirmInput() {
+    const chosenNumber = parseInt(enteredValue);
+    if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
+      Alert.alert("Invalid number!", "Number must be between 1 and 99.", [
+        { text: "Okay", style: "desctructive", onPress: handleResetInput }
+      ]);
+      return;
+    }
+    setConfirmed(true);
+    setSelectedNumber(chosenNumber);
+    setEnteredValue("");
+    Keyboard.dismiss();
+  }
+
+  let confirmedOutput;
+  if (confirmed) {
+    confirmedOutput = <Text>Chosen number: {selectedNumber}</Text>;
   }
 
   return (
@@ -31,22 +58,27 @@ export default function StartGame() {
             autoCorrect={false}
             keyboardType="number-pad"
             maxLength={2}
-            onChangeText={numberInputHandler}
+            onChangeText={handleNumberInput}
             value={enteredValue}
           />
           <View style={styles.buttonContainer}>
             <View style={styles.button}>
-              <Button title="Reset" onPress={() => {}} color={Colors.accent} />
+              <Button
+                title="Reset"
+                onPress={handleResetInput}
+                color={Colors.accent}
+              />
             </View>
             <View style={styles.button}>
               <Button
                 title="Confirm"
-                onPress={() => {}}
+                onPress={handleConfirmInput}
                 color={Colors.primary}
               />
             </View>
           </View>
         </Card>
+        {confirmedOutput}
       </View>
     </TouchableWithoutFeedback>
   );
