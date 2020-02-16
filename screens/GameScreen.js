@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Alert, Button, StyleSheet, Text, View } from "react-native";
 import Card from "../components/Card";
 import NumberContainer from "../components/NumberContainer";
+import DefaultStyles from "../constants/defaultStyles";
 
 function generateRandomBetween(min, max, exclude) {
   min = Math.ceil(min);
@@ -32,8 +33,8 @@ export default function GameScreen(props) {
 
   function handleNextGuess(direction) {
     if (
-      (direction === "lower" && currentGuess < props.userChoice) ||
-      (direction === "greater" && currentGuess > props.userChoice)
+      (direction === "lower" && currentGuess < userChoice) ||
+      (direction === "greater" && currentGuess > userChoice)
     ) {
       Alert.alert("Don't lie!", "You know that this is wrong...", [
         {
@@ -59,7 +60,7 @@ export default function GameScreen(props) {
 
   return (
     <View style={styles.screen}>
-      <Text>Opponent's Guess</Text>
+      <Text style={DefaultStyles.bodyText}>Opponent's Guess</Text>
       <NumberContainer>{currentGuess}</NumberContainer>
       <Card style={styles.buttonContainer}>
         <Button title="LOWER" onPress={handleNextGuess.bind(this, "lower")} />
