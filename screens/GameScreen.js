@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import Card from "../components/Card";
 import MainButton from "../components/MainButton";
 import NumberContainer from "../components/NumberContainer";
@@ -17,11 +17,19 @@ function generateRandomBetween(min, max, exclude) {
   }
 }
 
+function renderList(values) {
+  return values.map((value, index) => (
+    <View style={styles.listItem} key={value}>
+      <Text>#{values.length - index}</Text>
+      <Text>{value}</Text>
+    </View>
+  ))
+}
+
 export default function GameScreen(props) {
-  const [currentGuess, setCurrentGuess] = useState(
-    generateRandomBetween(1, 100, props.userChoice)
-  );
-  const [rounds, setRounds] = useState(0);
+  const initialGuess = generateRandomBetween(1, 100, props.userChoice)
+  const [currentGuess, setCurrentGuess] = useState(initialGuess);
+  const [pastGuesses, setPastGuesses] = useState([initialGuess]);
   const currentLow = useRef(1);
   const currentHigh = useRef(100);
 
@@ -29,7 +37,7 @@ export default function GameScreen(props) {
 
   useEffect(() => {
     if (currentGuess === userChoice) {
-      onGameOver(rounds);
+      onGameOver(pastGuesses.length);
     }
   }, [currentGuess, userChoice, onGameOver]);
 
@@ -49,7 +57,7 @@ export default function GameScreen(props) {
     if (direction === "lower") {
       currentHigh.current = currentGuess;
     } else {
-      currentLow.current = currentGuess;
+      currentLow.current = currentGuess + 1;
     }
     const nextNumber = generateRandomBetween(
       currentLow.current,
@@ -57,7 +65,7 @@ export default function GameScreen(props) {
       currentGuess
     );
     setCurrentGuess(nextNumber);
-    setRounds(currentRounds => currentRounds + 1);
+    setPastGuesses(curPastGuesses => [nextNumber, ...curPastGuesses]);
   }
 
   return (
@@ -72,6 +80,9 @@ export default function GameScreen(props) {
           <Ionicons name="md-add" size={24} color="white" />
         </MainButton>
       </Card>
+      <View style={styles.listContainer}>
+        <ScrollView contentContainerStyle={styles.list} >{renderList(pastGuesses)}</ScrollView>
+      </View>
     </View>
   );
 }
@@ -88,5 +99,24 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: 400,
     maxWidth: "90%"
+  },
+  listContainer: {
+    width: '80%',
+    flex: 1
+  },
+  list: {
+    alignItems: "center",
+    justifyContent: "flex-end",
+    flex: 1,
+  },
+  listItem: {
+    borderColor: '#ccc',
+    borderWidth: 1,
+    padding: 15,
+    margin: 10,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: "60%"
   }
 });
