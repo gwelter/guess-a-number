@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
+import MainButton from "../components/MainButton";
 import DefaultStyles from "../constants/defaultStyles";
 
 export default function GameOver(props) {
@@ -15,7 +16,7 @@ export default function GameOver(props) {
       <Text style={DefaultStyles.bodyText}>
         The number was: {props.userNumber}
       </Text>
-      <Button title="NEW GAME" onPress={props.onNewGame} />
+      <MainButton onPress={props.onNewGame}>NEW GAME</MainButton>
     </View>
   );
 }
@@ -36,6 +37,6 @@ const styles = StyleSheet.create({
   },
   image: {
     height: "100%",
-    width: "100$"
+    width: "100%"
   }
 });
