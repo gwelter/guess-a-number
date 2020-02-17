@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import Card from "../components/Card";
@@ -65,10 +66,10 @@ export default function GameScreen(props) {
       <NumberContainer>{currentGuess}</NumberContainer>
       <Card style={styles.buttonContainer}>
         <MainButton onPress={handleNextGuess.bind(this, "lower")}>
-          LOWER
+          <Ionicons name="md-remove" size={24} color="white" />
         </MainButton>
         <MainButton onPress={handleNextGuess.bind(this, "greater")}>
-          GREATER
+          <Ionicons name="md-add" size={24} color="white" />
         </MainButton>
       </Card>
     </View>
